@@ -68,11 +68,11 @@ if __name__ == "__main__":
 
     print("Train phoneme recognizer model...")
     clf = MLPClassifier(random_state=42, hidden_layer_sizes=(), max_iter=500, verbose=1)
-    clf.fit(train_df.feat.tolist(), train_df.phone)
+    clf.fit(train_df.feat.tolist(), train_y)
 
     for label in sorted(df.label.unique()):
         _df = df[df.label == label]
-        acc = (clf.predict(_df.feat.tolist()) == _df.phone).mean()
+        acc = (clf.predict(_df.feat.tolist()) == _df.phone.apply(vocab_to_index.get)).mean()
         print(f"Phoneme accuracy on label {label}: {acc:.4f}")
 
     print("Train Gaussian mixtures...")
