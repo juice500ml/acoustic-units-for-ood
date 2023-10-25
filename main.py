@@ -109,7 +109,7 @@ if __name__ == "__main__":
         }
 
         # Calculate gm scores
-        results["GM"] = phones.gm_scores.sum()
+        results["GM"] = phones.gm_scores.mean()
 
         # Sum up results
         dys_label = phones.label.unique()
