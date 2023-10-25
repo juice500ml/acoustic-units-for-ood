@@ -98,32 +98,6 @@ def _prepare_torgo(torgo_path: Path):
     return pd.DataFrame(rows)
 
 
-# class PhoneRecognitionDataset(torch.utils.data.Dataset):
-#     """
-#     * What should be saved in CSV file?
-#     We read the "audio" column and "label" column via pandas.read_csv.
-#     "audio" column should contain the absolute path to the audio, and "label" should be integer: 0, 1, 2.
-#     """
-
-#     def __init__(
-#         self,
-#         df: pd.DataFrame,
-#         sample_rate: int = 16000
-#     ):
-#         self.df = df
-#         self.audios = df.audio.unique()
-#         self.sample_rate = sample_rate
-
-#     def __len__(self):
-#         return len(self.audios)
-
-#     def __getitem__(self, i):
-#         x, _ = librosa.load(self.audios[i], sr=self.sample_rate, mono=True)
-#         y = self.df[self.df["audio"] == self.audios[i]]
-
-#         return x, y[["phone", "min", "max"]]
-
-
 if __name__ == "__main__":
     args = _get_args()
     _prepare = {"ssnce": _prepare_ssnce, "torgo": _prepare_torgo, }[args.dataset_type]

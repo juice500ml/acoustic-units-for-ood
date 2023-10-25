@@ -1,4 +1,5 @@
 import argparse
+import functools
 import pickle
 from pathlib import Path
 
@@ -16,6 +17,14 @@ def _get_args():
     return parser.parse_args()
 
 
+def _get_feat(row, feats):
+    index = int((row["min"] + row["max"]) / 2.0 * 16000) // 320
+    f = feats[row.audio]
+    if index >= len(f):
+        index = len(f) - 1
+    return f[index]
+
+
 if __name__ == "__main__":
     args = _get_args()
 
@@ -29,5 +38,8 @@ if __name__ == "__main__":
         outputs = model(**processor(raw_speech=[x], sampling_rate=16000, padding=False, return_tensors="pt"))
         data[path] = outputs.last_hidden_state.detach().numpy()[0]
 
-    with open(args.output_path, "wb") as f:
+    with open(args.output_path.parent / f"{args.output_path.stem}.raw.pkl", "wb") as f:
         pickle.dump(data, f)
+
+    df["feat"] = df.apply(functools.partial(_get_feat, feats=data), axis=1)
+    df.to_pickle(args.output_path, index=False, compression="gzip")
