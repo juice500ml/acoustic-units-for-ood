@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 def _get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset_path", type=Path, help="Path to dataset.")
-    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", ])
+    parser.add_argument("--dataset_path", type=Path, help="Path to dataset")
+    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", ])
     parser.add_argument("--output_path", type=Path, help="Output csv folder")
     return parser.parse_args()
 
@@ -32,6 +32,7 @@ def _prepare_ssnce(ssnce_path: Path):
     for label in labels:
         index, label_name = label.split("_")
         index = int(index)
+        split = "train" if index == 0 else "test"
 
         for audio_path in tqdm((ssnce_path / label).glob("*.wav")):
             grid_path = audio_path.with_suffix(".TextGrid")
@@ -50,6 +51,7 @@ def _prepare_ssnce(ssnce_path: Path):
                         "min": entry.start,
                         "max": entry.end,
                         "phone": label,
+                        "split": split,
                     })
                 else:
                     break
@@ -63,6 +65,7 @@ def _prepare_torgo(torgo_path: Path):
     for label in labels:
         index, label_name = label.split("_")
         index = int(index)
+        split = "train" if index == 0 else "test"
 
         for audio_path in tqdm((torgo_path / label).glob("*.wav")):
             grid_path = audio_path.with_suffix(".TextGrid")
@@ -83,6 +86,7 @@ def _prepare_torgo(torgo_path: Path):
                     "min": entry.start,
                     "max": entry.end,
                     "phone": label,
+                    "split": split,
                 })
 
             audio_length = librosa.get_duration(path=audio_path, sr=16000)
@@ -94,13 +98,58 @@ def _prepare_torgo(torgo_path: Path):
                     "min": entry.end,
                     "max": audio_length,
                     "phone": "(...)",
+                    "split": split,
                 })
+    return pd.DataFrame(rows)
+
+
+def _prepare_l2arctic(l2arctic_path: Path):
+    rows = []
+    def _remove_stray(p):
+        p = "".join([c for c in p if c not in "0123456789 _)`"]).upper()
+        if p in ("SIL", "SP", "SPN"):
+            p = "(...)"
+        return p
+
+    def _clean_phone(p):
+        p = p.split(",")
+        return _remove_stray(p[0]), int(len(p) != 1)
+
+    for grid_path in l2arctic_path.glob("*/annotation/*.TextGrid"):
+        audio_path = str(grid_path).replace("/annotation/", "/wav/").replace(".TextGrid", ".wav")
+        grid = praatio.textgrid.openTextgrid(grid_path, includeEmptyIntervals=True)
+        speaker = grid_path.parent.parent.name
+        if speaker == "suitcase_corpus":
+            continue
+        if speaker in ("NJS", "TLV", "TNI", "ZHAA", "TXHC", "YKWK"):
+            split = "test"
+        else:
+            split = "train"
+        for entry in grid.getTier("phones").entries:
+            emin = entry.xmin if hasattr(entry, "xmin") else entry.start
+            emax = entry.xmax if hasattr(entry, "xmax") else entry.end
+            phone = entry.text if hasattr(entry, "text") else entry.label
+            phone, label = _clean_phone(phone)
+            if not phone:
+                continue
+            if label == 1 and split == "train":
+                split = "train_excluded"
+            rows.append({
+                "audio": audio_path,
+                "speaker": speaker,
+                "split": split,
+                "min": emin,
+                "max": emax,
+                "phone": phone,
+                "label": label,
+                "label_name": ["correct", "wrong"][label],
+            })
     return pd.DataFrame(rows)
 
 
 if __name__ == "__main__":
     args = _get_args()
-    _prepare = {"ssnce": _prepare_ssnce, "torgo": _prepare_torgo, }[args.dataset_type]
+    _prepare = {"ssnce": _prepare_ssnce, "torgo": _prepare_torgo, "l2arctic": _prepare_l2arctic, }[args.dataset_type]
     df = _prepare(args.dataset_path)
     csv_path = args.output_path / f"{args.dataset_type}.csv.gz"
     df.to_csv(csv_path, index=False, compression="gzip")

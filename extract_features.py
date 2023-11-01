@@ -11,9 +11,10 @@ from tqdm import tqdm
 
 def _get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="microsoft/wavlm-large", help="Huggingface model name.")
+    parser.add_argument("--model", default="microsoft/wavlm-large", help="Huggingface model name")
     parser.add_argument("--dataset_csv", type=Path, help="Dataset to inference")
     parser.add_argument("--output_path", type=Path, help="Output pkl path")
+    parser.add_argument("--device", default="cpu", help="Device to infer, cpu or cuda:0 (gpu)")
     return parser.parse_args()
 
 
@@ -29,17 +30,18 @@ if __name__ == "__main__":
     args = _get_args()
 
     processor = Wav2Vec2FeatureExtractor.from_pretrained(args.model)
-    model = AutoModel.from_pretrained(args.model)
+    model = AutoModel.from_pretrained(args.model).to(args.device)
 
     df = pd.read_csv(args.dataset_csv)
     data = {}
     for path in tqdm(df.audio.unique()):
         x, _ = librosa.load(path, sr=16000, mono=True)
-        outputs = model(**processor(raw_speech=[x], sampling_rate=16000, padding=False, return_tensors="pt"))
-        data[path] = outputs.last_hidden_state.detach().numpy()[0]
+        x = processor(raw_speech=[x], sampling_rate=16000, padding=False, return_tensors="pt")
+        outputs = model(**{k: t.to(args.device) for k, t in x.items()})
+        data[path] = outputs.last_hidden_state.cpu().detach().numpy()[0]
 
     with open(args.output_path.parent / f"{args.output_path.stem}.raw.pkl", "wb") as f:
         pickle.dump(data, f)
 
     df["feat"] = df.apply(functools.partial(_get_feat, feats=data), axis=1)
-    df.to_pickle(args.output_path, index=False, compression="gzip")
+    df.to_pickle(args.output_path)
