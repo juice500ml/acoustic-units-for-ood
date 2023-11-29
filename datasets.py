@@ -1,20 +1,23 @@
 import argparse
-from itertools import product
+import os
+import json
+from collections import defaultdict
 from pathlib import Path
 
 import librosa
+import numpy as np
 import pandas as pd
 import praatio.textgrid
-import textgrids
+import kaldi_io
+import torch
 from tqdm import tqdm
-
-# import torch
+import os
 
 
 def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_path", type=Path, help="Path to dataset")
-    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", ])
+    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", "speechocean762"])
     parser.add_argument("--output_path", type=Path, help="Output csv folder")
     return parser.parse_args()
 
@@ -147,9 +150,97 @@ def _prepare_l2arctic(l2arctic_path: Path):
     return pd.DataFrame(rows)
 
 
+def _prepare_speechocean762(speechocean762_path: Path):
+    def _read_scp(scp_path: Path):
+        files = {}
+        for line in open(scp_path).readlines():
+            key, fname = line.strip().split("\t")
+            files[key] = fname
+        return files
+
+    def _read_alignment(alignment_path: Path):
+        original_working_dir = os.getcwd()
+        os.chdir(alignment_path.parent.parent.parent)
+        alignment_path = Path(*alignment_path.parts[2:])
+        alignments = {
+            key: alignment
+            for key, alignment in kaldi_io.read_vec_int_ark(str(alignment_path))
+        }
+        os.chdir(original_working_dir)
+        return alignments
+
+    def _read_feat(feat_path: Path):
+        original_working_dir = os.getcwd()
+        os.chdir(feat_path.parent.parent.parent)
+        feat_path = Path(*feat_path.parts[2:])
+        feats = defaultdict(list)
+        for key_index, feat in kaldi_io.read_vec_flt_scp(str(feat_path)):
+            key, index = key_index.split(".")
+            assert len(feats[key]) == int(index)
+            feats[key].append(np.array(feat))
+        os.chdir(original_working_dir)
+        return feats
+
+    def _remove_stray(p):
+        p = "".join([c for c in p if c not in "0123456789"]).upper()
+        return p
+
+
+    meta = json.load(open(speechocean762_path / "resource" / "scores.json"))
+
+    fnames = {}
+    fnames.update(_read_scp(speechocean762_path / "train" / "wav.scp"))
+    fnames.update(_read_scp(speechocean762_path / "test" / "wav.scp"))
+
+    alignments = {}
+    for alignment_path in speechocean762_path.glob("exp/ali_*/ali-phone.*.gz"):
+        alignments.update(_read_alignment(alignment_path))
+
+    feats = {}
+    for feat_path in speechocean762_path.glob("exp/gop_*/feat.scp"):
+        feats.update(_read_feat(feat_path))
+
+    rows = []
+    for key, scores in tqdm(meta.items()):
+        audio = speechocean762_path / fnames[key]
+        max_seconds = librosa.get_duration(path=audio)
+        alignment = alignments[key]
+        phones = [_remove_stray(p) for w in scores["words"] for p in w["phones"]]
+        assert len(phones) == len(feats[key])
+
+        # Calculate end_seconds
+        labels, counts = torch.unique_consecutive(
+            torch.LongTensor(alignment), return_counts=True)
+        end_seconds = np.cumsum(counts.numpy()) / counts.sum().item() * max_seconds
+        end_seconds = np.insert(end_seconds, 0, 0.0)
+
+        phone_index = 0
+        for index, label in enumerate(labels):
+            if label != 1: # Ignore SIL
+                rows.append({
+                    "audio": speechocean762_path / fnames[key],
+                    "label": scores["total"],
+                    "label_name": str(scores["total"]),
+                    "min": end_seconds[index],
+                    "max": end_seconds[index + 1],
+                    "phone": phones[phone_index],
+                    "split": "train" if scores["total"] >= 9.0 else "test",
+                    "feat": feats[key][phone_index],
+                })
+                phone_index += 1
+        assert phone_index == len(phones)
+
+    return pd.DataFrame(rows)
+
+
 if __name__ == "__main__":
     args = _get_args()
-    _prepare = {"ssnce": _prepare_ssnce, "torgo": _prepare_torgo, "l2arctic": _prepare_l2arctic, }[args.dataset_type]
+    _prepare = {
+        "ssnce": _prepare_ssnce,
+        "torgo": _prepare_torgo,
+        "l2arctic": _prepare_l2arctic,
+        "speechocean762": _prepare_speechocean762,
+    }[args.dataset_type]
     df = _prepare(args.dataset_path)
-    csv_path = args.output_path / f"{args.dataset_type}.csv.gz"
-    df.to_csv(csv_path, index=False, compression="gzip")
+    csv_path = args.output_path / f"{args.dataset_type}.original.pkl"
+    df.to_pickle(csv_path)

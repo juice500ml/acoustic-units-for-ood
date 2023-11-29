@@ -32,7 +32,7 @@ if __name__ == "__main__":
     processor = Wav2Vec2FeatureExtractor.from_pretrained(args.model)
     model = AutoModel.from_pretrained(args.model).to(args.device)
 
-    df = pd.read_csv(args.dataset_csv)
+    df = pd.read_pickle(args.dataset_csv)
     data = {}
     for path in tqdm(df.audio.unique()):
         x, _ = librosa.load(path, sr=16000, mono=True)
