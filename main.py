@@ -7,6 +7,7 @@ from scipy.special import softmax
 from scipy.stats import kendalltau
 from sklearn.neural_network import MLPClassifier
 from sklearn.mixture import GaussianMixture
+from sklearn.neighbors import NearestNeighbors
 from tqdm import tqdm
 
 
@@ -14,26 +15,29 @@ def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_pkl", type=Path, help="Dataset to evaluate")
     parser.add_argument("--n_components", type=int, default=4, help="Number of Gaussian components")
-    parser.add_argument("--normalize_features", type=bool, default=True, help="Normalize SSL features")
+    parser.add_argument("--knn_ratio", type=float, default=0.1, help="Ratio w.r.t. samples for kNN")
+    parser.add_argument("--normalize_features", action="store_true", help="Normalize SSL features")
     parser.add_argument("--skip_gop", action="store_true", help="Skip GoP calculation")
+    parser.add_argument("--skip_gm", action="store_true", help="Skip GM calculation")
+    parser.add_argument("--skip_knn", action="store_true", help="Skip kNN calculation")
     parser.add_argument("--evaluate_phonewise", action="store_true", help="Evaluate setting when each phone has a label")
     return parser.parse_args()
 
 
 def gmm_gop(logits, labels, prior):
-    preds = softmax(scores, -1)
+    preds = softmax(logits, -1)
     probs = preds[np.arange(len(labels)), labels]
     return np.log(probs)
 
 
 def nn_gop(logits, labels, prior):
-    preds = softmax(scores, -1)
+    preds = softmax(logits, -1)
     probs = preds[np.arange(len(labels)), labels]
     return np.log(probs) - np.log(preds.max(-1))
 
 
 def dnn_gop(logits, labels, prior):
-    preds = softmax(scores, -1) / prior
+    preds = softmax(logits, -1) / prior
     probs = preds[np.arange(len(labels)), labels]
     return probs
 
@@ -57,7 +61,8 @@ if __name__ == "__main__":
 
     # Methods to evaluate
     methods = [] if args.skip_gop else list(gops.keys())
-    methods += ["GM"]
+    methods += [] if args.skip_gm else ["GM"]
+    methods += [] if args.skip_knn else ["kNN"]
 
     print("Load data...")
     df = pd.read_pickle(args.dataset_pkl)
@@ -104,23 +109,54 @@ if __name__ == "__main__":
             for name, func in gops.items():
                 test_df.loc[phones.index, name] = func(scores, labels, prior)
 
-    print("Train Gaussian mixtures...")
-    gms = {}
-    for phone in tqdm(vocab):
-        embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
-        if args.normalize_features:
-            embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
-        gms[phone] = GaussianMixture(n_components=args.n_components, random_state=0).fit(embs)
+    if not args.skip_knn:
+        print("Train kNN...")
+        knns = {}
+        for phone in tqdm(vocab):
+            embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
+            if args.normalize_features:
+                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
+            n_neighbors = max(int(args.knn_ratio * len(embs)), 1)
+            knns[phone] = NearestNeighbors(algorithm="auto", n_neighbors=n_neighbors)
+            knns[phone].fit(embs)
+            del embs
 
-    print("Calculate GM scores...")
-    test_df["GM"] = np.nan
-    for phone in tqdm(vocab):
-        phones = test_df[test_df.phone == phone]
-        embs = phones.feat.tolist()
-        if args.normalize_features:
-            embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
-        scores = gms[phone].score_samples(embs)
-        test_df.loc[phones.index, "GM"] = scores
+        print("Calculate kNN scores...")
+        test_df["kNN"] = np.nan
+        for phone in tqdm(vocab):
+            phones = test_df[test_df.phone == phone]
+            embs = phones.feat.tolist()
+            if args.normalize_features:
+                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
+            scores, _ = knns[phone].kneighbors(embs, return_distance=True)
+            test_df.loc[phones.index, "kNN"] = scores[:, -1]
+
+    if not args.skip_gm:
+        print("Train Gaussian mixtures...")
+        gms = {}
+        for phone in tqdm(vocab):
+            embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
+            if args.normalize_features:
+                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
+            gms[phone] = GaussianMixture(
+                n_components=args.n_components,
+                random_state=0,
+                n_init=10,
+                verbose=2,
+                verbose_interval=1,
+            )
+            gms[phone].fit(embs)
+            del embs
+
+        print("Calculate GM scores...")
+        test_df["GM"] = np.nan
+        for phone in tqdm(vocab):
+            phones = test_df[test_df.phone == phone]
+            embs = phones.feat.tolist()
+            if args.normalize_features:
+                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
+            scores = gms[phone].score_samples(embs)
+            test_df.loc[phones.index, "GM"] = scores
 
     # Evaluate
     if args.evaluate_phonewise:
