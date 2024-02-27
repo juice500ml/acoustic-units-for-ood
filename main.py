@@ -5,21 +5,27 @@ import numpy as np
 import pandas as pd
 from scipy.special import softmax
 from scipy.stats import kendalltau
-from sklearn.neural_network import MLPClassifier
 from sklearn.mixture import GaussianMixture
 from sklearn.neighbors import NearestNeighbors
+from sklearn.neural_network import MLPClassifier
+from sklearn.svm import OneClassSVM
 from tqdm import tqdm
+
+from trainable_attention import train_attn
 
 
 def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_pkl", type=Path, help="Dataset to evaluate")
-    parser.add_argument("--n_components", type=int, default=4, help="Number of Gaussian components")
+    parser.add_argument("--n_components", type=int, default=32, help="Number of Gaussian components")
     parser.add_argument("--knn_ratio", type=float, default=0.1, help="Ratio w.r.t. samples for kNN")
     parser.add_argument("--normalize_features", action="store_true", help="Normalize SSL features")
     parser.add_argument("--skip_gop", action="store_true", help="Skip GoP calculation")
     parser.add_argument("--skip_gm", action="store_true", help="Skip GM calculation")
     parser.add_argument("--skip_knn", action="store_true", help="Skip kNN calculation")
+    parser.add_argument("--skip_attngm", action="store_true", help="Skip GM attention calculation")
+    parser.add_argument("--skip_svm", action="store_true", help="Skip one-class SVM calculation")
+    parser.add_argument("--skip_psvm", action="store_true", help="Skip one-class phoneme-wise SVM calculation")
     parser.add_argument("--evaluate_phonewise", action="store_true", help="Evaluate setting when each phone has a label")
     return parser.parse_args()
 
@@ -63,9 +69,16 @@ if __name__ == "__main__":
     methods = [] if args.skip_gop else list(gops.keys())
     methods += [] if args.skip_gm else ["GM"]
     methods += [] if args.skip_knn else ["kNN"]
+    methods += [] if (args.skip_gm or args.skip_attngm) else ["GM_attn"]
+    methods += [] if args.skip_svm else ["SVM"]
+    methods += [] if args.skip_psvm else ["PSVM"]
 
     print("Load data...")
     df = pd.read_pickle(args.dataset_pkl)
+
+    # Normalize features
+    if args.normalize_features:
+        df.feat = df.feat.apply(lambda emb: emb / np.linalg.norm(emb))
 
     # Label vocabs
     _vc = df.phone.value_counts()
@@ -114,8 +127,6 @@ if __name__ == "__main__":
         knns = {}
         for phone in tqdm(vocab):
             embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
-            if args.normalize_features:
-                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
             n_neighbors = max(int(args.knn_ratio * len(embs)), 1)
             knns[phone] = NearestNeighbors(algorithm="auto", n_neighbors=n_neighbors)
             knns[phone].fit(embs)
@@ -126,24 +137,18 @@ if __name__ == "__main__":
         for phone in tqdm(vocab):
             phones = test_df[test_df.phone == phone]
             embs = phones.feat.tolist()
-            if args.normalize_features:
-                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
             scores, _ = knns[phone].kneighbors(embs, return_distance=True)
-            test_df.loc[phones.index, "kNN"] = scores[:, -1]
+            test_df.loc[phones.index, "kNN"] = -scores[:, -1]
 
     if not args.skip_gm:
         print("Train Gaussian mixtures...")
         gms = {}
         for phone in tqdm(vocab):
             embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
-            if args.normalize_features:
-                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
             gms[phone] = GaussianMixture(
                 n_components=args.n_components,
                 random_state=0,
                 n_init=10,
-                verbose=2,
-                verbose_interval=1,
             )
             gms[phone].fit(embs)
             del embs
@@ -153,10 +158,41 @@ if __name__ == "__main__":
         for phone in tqdm(vocab):
             phones = test_df[test_df.phone == phone]
             embs = phones.feat.tolist()
-            if args.normalize_features:
-                embs /= np.linalg.norm(embs, axis=1).reshape(-1, 1)
             scores = gms[phone].score_samples(embs)
             test_df.loc[phones.index, "GM"] = scores
+
+        if not args.skip_attngm:
+            print("Train attention for GM..")
+            attn = train_attn(test_df, vocab_to_index)
+            test_df["GM_Attn"] = np.nan
+            for phone in vocab:
+                w = attn[vocab_to_index[phone]]
+                test_df.loc[phones.index, "GM_attn"] = w * test_df.loc[phones.index, "GM"]
+
+    if not args.skip_svm:
+        print("Train one-class SVM...")
+        clf = OneClassSVM(verbose=1)
+        clf.fit(train_df.feat.tolist())
+
+        print("Calculating SVM scores...")
+        test_df["SVM"] = clf.score_samples(test_df.feat.tolist())
+
+    if not args.skip_psvm:
+        print("Train one-class SVM per phoneme...")
+        svms = {}
+        for phone in tqdm(vocab):
+            embs = np.stack(train_df[train_df.phone == phone].feat.tolist())
+            svms[phone] = OneClassSVM(verbose=1)
+            svms[phone].fit(embs)
+            del embs
+
+        print("Calculating SVM scores per phoneme...")
+        test_df["PSVM"] = np.nan
+        for phone in tqdm(vocab):
+            phones = test_df[test_df.phone == phone]
+            embs = phones.feat.tolist()
+            scores = svms[phone].score_samples(embs)
+            test_df.loc[phones.index, "PSVM"] = scores
 
     # Evaluate
     if args.evaluate_phonewise:
