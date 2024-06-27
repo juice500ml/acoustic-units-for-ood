@@ -17,7 +17,7 @@ import os
 def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_path", type=Path, help="Path to dataset")
-    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", "speechocean762"])
+    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", "speechocean762", "uaspeech"])
     parser.add_argument("--output_path", type=Path, help="Output csv folder")
     return parser.parse_args()
 
@@ -27,6 +27,50 @@ def get_vocab(df):
     index_to_vocab = dict(enumerate(sorted(vocabs)))
     vocab_to_index = {v: i for i, v in index_to_vocab.items()}
     return index_to_vocab, vocab_to_index
+
+
+def _prepare_uaspeech(uaspeech_path: Path):
+    label_info = {
+        (0, "healthy"): "CF02 CF03 CF04 CM04 CM05 CM06 CM08 CM09 CM10 CM12 CM13".split(),
+        (1, "verylow"): "F03 M01 M04 M12".split(),
+        (2, "low"): "F02 M07 M16".split(),
+        (3, "mid"): "F04 M05 M11".split(),
+        (4, "high"): "M08 M09 M10 M14".split(),
+    }
+    speaker_info = {spk: label for label, spks in label_info.items() for spk in spks}
+
+    rows = []
+    for p in tqdm(uaspeech_path.glob("noisereduced/*/*.TextGrid")):
+        if p.name.split("_")[1] != "B1":
+            continue
+        grid = praatio.textgrid.openTextgrid(p, includeEmptyIntervals=True)
+        audio_path = p.with_suffix(".wav")
+        audio_len = librosa.get_duration(path=audio_path, sr=16000)
+
+        speaker = p.parent.name
+        index, label_name = speaker_info[speaker]
+        split = "train" if index == 0 else "test"
+
+        for entry in grid.getTier("phones").entries:
+            label = entry.label
+            if label in ("", "spn"):
+                label = "(...)"
+            if "0" <= label[-1] <= "9":
+                label = label[:-1]
+
+            if entry.end <= audio_len:
+                rows.append({
+                    "audio": audio_path,
+                    "label": index, # 0: healthy
+                    "label_name": label_name,
+                    "min": entry.start,
+                    "max": entry.end,
+                    "phone": label,
+                    "split": split,
+                })
+        rows[-1]["max"] = audio_len
+
+    return pd.DataFrame(rows)
 
 
 def _prepare_ssnce(ssnce_path: Path):
@@ -240,6 +284,7 @@ if __name__ == "__main__":
         "torgo": _prepare_torgo,
         "l2arctic": _prepare_l2arctic,
         "speechocean762": _prepare_speechocean762,
+        "uaspeech": _prepare_uaspeech,
     }[args.dataset_type]
     df = _prepare(args.dataset_path)
     csv_path = args.output_path / f"{args.dataset_type}.original.pkl"
