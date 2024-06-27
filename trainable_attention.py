@@ -81,9 +81,9 @@ def _test_loop(test_dl, attn):
     return kendalltau(scores, labels).statistic, scores, labels
 
 
-def train_attn(train_dl, valid_dl, epochs=20):
+def train_attn(train_dl, valid_dl, epochs=10):
     attn = torch.tensor([1.0] * ds.get_vocab_size(), requires_grad=True)
-    optimizer = torch.optim.AdamW([attn], lr=1e-2)
+    optimizer = torch.optim.AdamW([attn], lr=1e-3)
 
     epoch_loop = tqdm(range(epochs))
     best_kt, _, _ = kt, _, _ = _test_loop(valid_dl, attn)
