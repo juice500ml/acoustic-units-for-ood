@@ -15,6 +15,7 @@ def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--score_path", type=Path, required=True, help="Path with the resulting scores per method per phone")
     parser.add_argument("--output_path", type=Path, required=True, help="Path to store the attention moduel results")
+    parser.add_argument("--invert_label", action="store_true", help="Invert label to reverse the correlation")
     return parser.parse_args()
 
 
@@ -80,7 +81,7 @@ def _test_loop(test_dl, attn):
     return kendalltau(scores, labels).statistic, scores, labels
 
 
-def train_attn(train_dl, valid_dl, epochs=10):
+def train_attn(train_dl, valid_dl, epochs=20):
     attn = torch.tensor([1.0] * ds.get_vocab_size(), requires_grad=True)
     optimizer = torch.optim.AdamW([attn], lr=1e-2)
 
@@ -122,6 +123,8 @@ if __name__ == "__main__":
     gm_min, gm_max = df["GM"].min(), df["GM"].max()
 
     df = df[df.split == "test"]
+    if args.invert_label:
+        df.label = - df.label
     df.reset_index(drop=True, inplace=True)
     audios = df.audio.unique()
 
@@ -153,5 +156,6 @@ if __name__ == "__main__":
     test_kt = kendalltau(np.concatenate(scores_acc), np.concatenate(labels_acc)).statistic
     print(f"All folds finished. {test_kt}")
     outputs["test_kt"] = test_kt
+    outputs["index_to_vocab"] = index_to_vocab
     with open(args.output_path, "wb") as f:
         pickle.dump(outputs, f)
