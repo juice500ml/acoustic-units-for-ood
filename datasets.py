@@ -41,7 +41,7 @@ def _prepare_uaspeech(uaspeech_path: Path):
 
     rows = []
     for p in tqdm(uaspeech_path.glob("noisereduced/*/*.TextGrid")):
-        if p.name.split("_")[1] != "B1":
+        if p.stem.split("_")[3] != "M6":
             continue
         grid = praatio.textgrid.openTextgrid(p, includeEmptyIntervals=True)
         audio_path = p.with_suffix(".wav")
@@ -54,7 +54,7 @@ def _prepare_uaspeech(uaspeech_path: Path):
         for entry in grid.getTier("phones").entries:
             label = entry.label
             if label in ("", "spn"):
-                label = "(...)"
+                continue
             if "0" <= label[-1] <= "9":
                 label = label[:-1]
 
@@ -68,7 +68,6 @@ def _prepare_uaspeech(uaspeech_path: Path):
                     "phone": label,
                     "split": split,
                 })
-        rows[-1]["max"] = audio_len
 
     return pd.DataFrame(rows)
 
