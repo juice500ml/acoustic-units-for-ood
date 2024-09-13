@@ -13,6 +13,7 @@ import torch
 from tqdm import tqdm
 import os
 from datasets import load_dataset
+from data.timit import TIMITConverter
 
 
 def _get_args():
@@ -279,6 +280,7 @@ def _prepare_speechocean762(speechocean762_path: Path):
 
 def _prepare_timit(timit_path: Path):
     timit = load_dataset('timit_asr', data_dir=timit_path, trust_remote_code=True)
+    converter = TIMITConverter(timit_mapping_path='data')
 
     rows = []
     for split in ['train', 'test']:
@@ -286,12 +288,17 @@ def _prepare_timit(timit_path: Path):
             audio_path = utterance['audio']['path']
             speaker = utterance['speaker_id']
             for phn in utterance['phonetic_detail']:
+                arpa_phone = converter.convert(phn['utterance'])[0]
+                if arpa_phone == '':
+                    # sil
+                    continue
+
                 rows.append({
                     "audio": audio_path,
                     "speaker": speaker,
                     "min": phn['start'],
                     "max": phn['stop'],
-                    "phone": phn['utterance'],
+                    "phone": arpa_phone,
                     "split": split
                 })
 
