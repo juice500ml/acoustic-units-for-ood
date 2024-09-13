@@ -11,3 +11,4 @@ kaldi-io==0.9.8
 umap-learn==0.5.4
 kaldi-io==0.9.8
 jupyterlab>=4.0
+datasets==3.0.0
