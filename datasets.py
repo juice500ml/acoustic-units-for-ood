@@ -12,6 +12,7 @@ import kaldi_io
 import torch
 from tqdm import tqdm
 import os
+from datasets import load_dataset
 
 
 def _get_args():
@@ -272,6 +273,27 @@ def _prepare_speechocean762(speechocean762_path: Path):
                 })
                 phone_index += 1
         assert phone_index == len(phones)
+
+    return pd.DataFrame(rows)
+
+
+def _prepare_timit(timit_path: Path):
+    timit = load_dataset('timit_asr', data_dir=timit_path, trust_remote_code=True)
+
+    rows = []
+    for split in ['train', 'test']:
+        for utterance in timit[split]:
+            audio_path = utterance['audio']['path']
+            speaker = utterance['speaker_id']
+            for phn in utterance['phonetic_detail']:
+                rows.append({
+                    "audio": audio_path,
+                    "speaker": speaker,
+                    "min": phn['start'],
+                    "max": phn['stop'],
+                    "phone": phn['utterance'],
+                    "split": split
+                })
 
     return pd.DataFrame(rows)
 
