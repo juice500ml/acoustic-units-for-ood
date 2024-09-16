@@ -5,7 +5,7 @@
 dataset_type=torgo
 formatted_dataset=path/to/store/formatted/dataset.pkl
 
-python3 datasets.py \
+python3 dataset_prep.py \
     --dataset_path path/to/original/dataset \
     --dataset_type $dataset_type \
     --output_path $formatted_dataset
