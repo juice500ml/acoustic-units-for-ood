@@ -19,7 +19,7 @@ from data.timit import TIMITConverter
 def _get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_path", type=Path, help="Path to dataset")
-    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", "speechocean762", "uaspeech"])
+    parser.add_argument("--dataset_type", type=str, choices=["ssnce", "torgo", "l2arctic", "speechocean762", "uaspeech", "timit"])
     parser.add_argument("--output_path", type=Path, help="Output csv folder")
     return parser.parse_args()
 
@@ -313,6 +313,7 @@ if __name__ == "__main__":
         "l2arctic": _prepare_l2arctic,
         "speechocean762": _prepare_speechocean762,
         "uaspeech": _prepare_uaspeech,
+        "timit": _prepare_timit,
     }[args.dataset_type]
     df = _prepare(args.dataset_path)
     csv_path = args.output_path / f"{args.dataset_type}.original.pkl"
