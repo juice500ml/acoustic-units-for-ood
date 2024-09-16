@@ -284,20 +284,22 @@ def _prepare_timit(timit_path: Path):
 
     rows = []
     for split in ['train', 'test']:
-        for utterance in timit[split]:
+        for utterance in tqdm(timit[split]):
             audio_path = utterance['audio']['path']
             speaker = utterance['speaker_id']
-            for phn in utterance['phonetic_detail']:
-                arpa_phone = converter.convert(phn['utterance'])[0]
-                if arpa_phone == '':
-                    # sil
+            alignment = utterance['phonetic_detail']
+            for phn, start, stop in zip(alignment['utterance'], alignment['start'], alignment['stop']):
+                # phn could be mapped to sil, which is removed
+                arpa_phones = converter.convert(phn)
+                if len(arpa_phones) == 0:
                     continue
+                arpa_phone = arpa_phones[0]
 
                 rows.append({
                     "audio": audio_path,
                     "speaker": speaker,
-                    "min": phn['start'],
-                    "max": phn['stop'],
+                    "min": start,
+                    "max": stop,
                     "phone": arpa_phone,
                     "split": split
                 })
