@@ -1,9 +1,9 @@
 # Usages
 ## Dataset preparation
 ```bash
-# supported datasets: torgo, ssnce, l2arctic, speechocean762, uaspeech
+# supported datasets: torgo, ssnce, l2arctic, speechocean762, uaspeech, timit
 dataset_type=torgo
-formatted_dataset=path/to/store/formatted/dataset.pkl
+formatted_dataset=path/to/store/formatted/dataset/
 
 python3 dataset_prep.py \
     --dataset_path path/to/original/dataset \
