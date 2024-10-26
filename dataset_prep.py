@@ -298,8 +298,8 @@ def _prepare_timit(timit_path: Path):
                 rows.append({
                     "audio": audio_path,
                     "speaker": speaker,
-                    "min": start,
-                    "max": stop,
+                    "min": start / 16000,
+                    "max": stop / 16000,
                     "phone": arpa_phone,
                     "split": split
                 })
