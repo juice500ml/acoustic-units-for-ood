@@ -279,16 +279,16 @@ def _prepare_speechocean762(speechocean762_path: Path):
 
 
 def _prepare_timit(timit_path: Path):
-    timit = load_dataset('timit_asr', data_dir=timit_path, trust_remote_code=True)
-    converter = TIMITConverter(timit_mapping_path='data')
+    timit = load_dataset("timit_asr", data_dir=timit_path, trust_remote_code=True)
+    converter = TIMITConverter(timit_mapping_path="data")
 
     rows = []
-    for split in ['train', 'test']:
+    for split in ["train", "test"]:
         for utterance in tqdm(timit[split]):
-            audio_path = utterance['audio']['path']
-            speaker = utterance['speaker_id']
-            alignment = utterance['phonetic_detail']
-            for phn, start, stop in zip(alignment['utterance'], alignment['start'], alignment['stop']):
+            audio_path = utterance["audio"]["path"]
+            speaker = utterance["speaker_id"]
+            alignment = utterance["phonetic_detail"]
+            for phn, start, stop in zip(alignment["utterance"], alignment["start"], alignment["stop"]):
                 # phn could be mapped to sil, which is removed
                 arpa_phones = converter.convert(phn)
                 if len(arpa_phones) == 0:
@@ -301,6 +301,7 @@ def _prepare_timit(timit_path: Path):
                     "min": start / 16000,
                     "max": stop / 16000,
                     "phone": arpa_phone,
+                    "allophone": phn,
                     "split": split
                 })
 

@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 5.295 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 5.295 
+        intervals: size = 6 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.1212085159810092 
+            text = "" 
+        intervals [2]:
+            xmin = 2.1212085159810092 
+            xmax = 2.6723250700008956 
+            text = "i" 
+        intervals [3]:
+            xmin = 2.6723250700008956 
+            xmax = 3.2730917640225736 
+            text = "will" 
+        intervals [4]:
+            xmin = 3.2730917640225736 
+            xmax = 4.007913836049089 
+            text = "lead" 
+        intervals [5]:
+            xmin = 4.007913836049089 
+            xmax = 4.678190726073275 
+            text = "you" 
+        intervals [6]:
+            xmin = 4.678190726073275 
+            xmax = 5.295 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 5.295 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0 
+            xmax = 2.131138543981368 
+            text = "" 
+        intervals [2]:
+            xmin = 2.131138543981368 
+            xmax = 2.6723250700008956 
+            text = "AY1" 
+        intervals [3]:
+            xmin = 2.6723250700008956 
+            xmax = 2.930505798010212 
+            text = "W" 
+        intervals [4]:
+            xmin = 2.930505798010212 
+            xmax = 3.124141344017199 
+            text = "AH0" 
+        intervals [5]:
+            xmin = 3.124141344017199 
+            xmax = 3.2730917640225736 
+            text = "L" 
+        intervals [6]:
+            xmin = 3.2730917640225736 
+            xmax = 3.4915523800304564 
+            text = "L" 
+        intervals [7]:
+            xmin = 3.4915523800304564 
+            xmax = 3.918543584045864 
+            text = "EH1" 
+        intervals [8]:
+            xmin = 3.918543584045864 
+            xmax = 4.007913836049089 
+            text = "D" 
+        intervals [9]:
+            xmin = 4.007913836049089 
+            xmax = 4.206514396056255 
+            text = "Y" 
+        intervals [10]:
+            xmin = 4.206514396056255 
+            xmax = 4.678190726073275 
+            text = "UW1" 
+        intervals [11]:
+            xmin = 4.678190726073275 
+            xmax = 5.295 
+            text = "" 

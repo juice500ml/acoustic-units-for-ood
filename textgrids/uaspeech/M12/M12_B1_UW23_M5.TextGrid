@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 6.92875 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 6.92875 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 2.17 
+            text = "" 
+        intervals [2]:
+            xmin = 2.17 
+            xmax = 5.54 
+            text = "autobiography" 
+        intervals [3]:
+            xmin = 5.54 
+            xmax = 6.92875 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 6.92875 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 2.17 
+            text = "" 
+        intervals [2]:
+            xmin = 2.17 
+            xmax = 3.66 
+            text = "AO2" 
+        intervals [3]:
+            xmin = 3.66 
+            xmax = 3.69 
+            text = "T" 
+        intervals [4]:
+            xmin = 3.69 
+            xmax = 3.76 
+            text = "AH0" 
+        intervals [5]:
+            xmin = 3.76 
+            xmax = 3.79 
+            text = "B" 
+        intervals [6]:
+            xmin = 3.79 
+            xmax = 3.89 
+            text = "AY0" 
+        intervals [7]:
+            xmin = 3.89 
+            xmax = 4.44 
+            text = "AA1" 
+        intervals [8]:
+            xmin = 4.44 
+            xmax = 4.49 
+            text = "G" 
+        intervals [9]:
+            xmin = 4.49 
+            xmax = 5.23 
+            text = "R" 
+        intervals [10]:
+            xmin = 5.23 
+            xmax = 5.32 
+            text = "AH0" 
+        intervals [11]:
+            xmin = 5.32 
+            xmax = 5.51 
+            text = "F" 
+        intervals [12]:
+            xmin = 5.51 
+            xmax = 5.54 
+            text = "IY0" 
+        intervals [13]:
+            xmin = 5.54 
+            xmax = 6.92875 
+            text = "" 

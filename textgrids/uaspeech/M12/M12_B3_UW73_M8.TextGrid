@@ -1,0 +1,88 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 12.127062 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 12.127062 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 6.43 
+            text = "" 
+        intervals [2]:
+            xmin = 6.43 
+            xmax = 9.04 
+            text = "inexhaustible" 
+        intervals [3]:
+            xmin = 9.04 
+            xmax = 12.127062 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 12.127062 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 6.43 
+            text = "" 
+        intervals [2]:
+            xmin = 6.43 
+            xmax = 6.46 
+            text = "IH0" 
+        intervals [3]:
+            xmin = 6.46 
+            xmax = 6.5 
+            text = "N" 
+        intervals [4]:
+            xmin = 6.5 
+            xmax = 7.69 
+            text = "IH0" 
+        intervals [5]:
+            xmin = 7.69 
+            xmax = 7.79 
+            text = "G" 
+        intervals [6]:
+            xmin = 7.79 
+            xmax = 7.82 
+            text = "Z" 
+        intervals [7]:
+            xmin = 7.82 
+            xmax = 8.23 
+            text = "AO1" 
+        intervals [8]:
+            xmin = 8.23 
+            xmax = 8.91 
+            text = "S" 
+        intervals [9]:
+            xmin = 8.91 
+            xmax = 8.94 
+            text = "T" 
+        intervals [10]:
+            xmin = 8.94 
+            xmax = 8.97 
+            text = "AH0" 
+        intervals [11]:
+            xmin = 8.97 
+            xmax = 9.0 
+            text = "B" 
+        intervals [12]:
+            xmin = 9.0 
+            xmax = 9.01 
+            text = "AH0" 
+        intervals [13]:
+            xmin = 9.01 
+            xmax = 9.04 
+            text = "L" 
+        intervals [14]:
+            xmin = 9.04 
+            xmax = 12.127062 
+            text = "" 

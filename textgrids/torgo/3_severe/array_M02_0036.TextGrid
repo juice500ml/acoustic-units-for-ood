@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 3 
+        intervals: size = 6 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.85 
+            text = "" 
+        intervals [2]:
+            xmin = 0.85 
+            xmax = 1.23 
+            text = "i" 
+        intervals [3]:
+            xmin = 1.23 
+            xmax = 1.26 
+            text = "" 
+        intervals [4]:
+            xmin = 1.26 
+            xmax = 1.5928302900883355 
+            text = "can" 
+        intervals [5]:
+            xmin = 1.5928302900883355 
+            xmax = 2.3804812362923946 
+            text = "read" 
+        intervals [6]:
+            xmin = 2.3804812362923946 
+            xmax = 3 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 3 
+        intervals: size = 10 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.85 
+            text = "" 
+        intervals [2]:
+            xmin = 0.85 
+            xmax = 1.23 
+            text = "AY1" 
+        intervals [3]:
+            xmin = 1.23 
+            xmax = 1.26 
+            text = "#" 
+        intervals [4]:
+            xmin = 1.26 
+            xmax = 1.37 
+            text = "K" 
+        intervals [5]:
+            xmin = 1.37 
+            xmax = 1.45 
+            text = "AE1" 
+        intervals [6]:
+            xmin = 1.45 
+            xmax = 1.5928302900883355 
+            text = "N" 
+        intervals [7]:
+            xmin = 1.5928302900883355 
+            xmax = 1.82 
+            text = "R" 
+        intervals [8]:
+            xmin = 1.82 
+            xmax = 2.06 
+            text = "EH1" 
+        intervals [9]:
+            xmin = 2.06 
+            xmax = 2.3832942753859805 
+            text = "D" 
+        intervals [10]:
+            xmin = 2.3832942753859805 
+            xmax = 3 
+            text = "" 

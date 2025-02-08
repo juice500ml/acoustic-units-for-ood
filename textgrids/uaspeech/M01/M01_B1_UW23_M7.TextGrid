@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 6.846188 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 6.846188 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 1.42 
+            text = "" 
+        intervals [2]:
+            xmin = 1.42 
+            xmax = 3.02 
+            text = "autobiography" 
+        intervals [3]:
+            xmin = 3.02 
+            xmax = 6.846188 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 6.846188 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 1.42 
+            text = "" 
+        intervals [2]:
+            xmin = 1.42 
+            xmax = 1.69 
+            text = "AO2" 
+        intervals [3]:
+            xmin = 1.69 
+            xmax = 1.73 
+            text = "T" 
+        intervals [4]:
+            xmin = 1.73 
+            xmax = 1.79 
+            text = "AH0" 
+        intervals [5]:
+            xmin = 1.79 
+            xmax = 1.85 
+            text = "B" 
+        intervals [6]:
+            xmin = 1.85 
+            xmax = 1.88 
+            text = "AY0" 
+        intervals [7]:
+            xmin = 1.88 
+            xmax = 2.33 
+            text = "AA1" 
+        intervals [8]:
+            xmin = 2.33 
+            xmax = 2.45 
+            text = "G" 
+        intervals [9]:
+            xmin = 2.45 
+            xmax = 2.63 
+            text = "R" 
+        intervals [10]:
+            xmin = 2.63 
+            xmax = 2.83 
+            text = "AH0" 
+        intervals [11]:
+            xmin = 2.83 
+            xmax = 2.96 
+            text = "F" 
+        intervals [12]:
+            xmin = 2.96 
+            xmax = 3.02 
+            text = "IY0" 
+        intervals [13]:
+            xmin = 3.02 
+            xmax = 6.846188 
+            text = "" 

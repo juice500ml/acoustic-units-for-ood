@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 11.79075 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 11.79075 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 7.02 
+            text = "" 
+        intervals [2]:
+            xmin = 7.02 
+            xmax = 10.48 
+            text = "psychological" 
+        intervals [3]:
+            xmin = 10.48 
+            xmax = 11.79075 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 11.79075 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 7.02 
+            text = "" 
+        intervals [2]:
+            xmin = 7.02 
+            xmax = 7.05 
+            text = "S" 
+        intervals [3]:
+            xmin = 7.05 
+            xmax = 7.08 
+            text = "AY2" 
+        intervals [4]:
+            xmin = 7.08 
+            xmax = 7.11 
+            text = "K" 
+        intervals [5]:
+            xmin = 7.11 
+            xmax = 7.14 
+            text = "AH0" 
+        intervals [6]:
+            xmin = 7.14 
+            xmax = 8.87 
+            text = "L" 
+        intervals [7]:
+            xmin = 8.87 
+            xmax = 9.43 
+            text = "AA1" 
+        intervals [8]:
+            xmin = 9.43 
+            xmax = 9.46 
+            text = "JH" 
+        intervals [9]:
+            xmin = 9.46 
+            xmax = 9.49 
+            text = "IH0" 
+        intervals [10]:
+            xmin = 9.49 
+            xmax = 9.52 
+            text = "K" 
+        intervals [11]:
+            xmin = 9.52 
+            xmax = 9.56 
+            text = "AH0" 
+        intervals [12]:
+            xmin = 9.56 
+            xmax = 10.48 
+            text = "L" 
+        intervals [13]:
+            xmin = 10.48 
+            xmax = 11.79075 
+            text = "" 

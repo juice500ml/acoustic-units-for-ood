@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 5.452813 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 5.452813 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 1.78 
+            text = "" 
+        intervals [2]:
+            xmin = 1.78 
+            xmax = 3.41 
+            text = "professionals" 
+        intervals [3]:
+            xmin = 3.41 
+            xmax = 5.452813 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 5.452813 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 1.78 
+            text = "" 
+        intervals [2]:
+            xmin = 1.78 
+            xmax = 1.9 
+            text = "P" 
+        intervals [3]:
+            xmin = 1.9 
+            xmax = 1.98 
+            text = "R" 
+        intervals [4]:
+            xmin = 1.98 
+            xmax = 2.3 
+            text = "AH0" 
+        intervals [5]:
+            xmin = 2.3 
+            xmax = 2.51 
+            text = "F" 
+        intervals [6]:
+            xmin = 2.51 
+            xmax = 2.88 
+            text = "EH1" 
+        intervals [7]:
+            xmin = 2.88 
+            xmax = 2.91 
+            text = "SH" 
+        intervals [8]:
+            xmin = 2.91 
+            xmax = 2.94 
+            text = "AH0" 
+        intervals [9]:
+            xmin = 2.94 
+            xmax = 2.97 
+            text = "N" 
+        intervals [10]:
+            xmin = 2.97 
+            xmax = 3.0 
+            text = "AH0" 
+        intervals [11]:
+            xmin = 3.0 
+            xmax = 3.11 
+            text = "L" 
+        intervals [12]:
+            xmin = 3.11 
+            xmax = 3.41 
+            text = "Z" 
+        intervals [13]:
+            xmin = 3.41 
+            xmax = 5.452813 
+            text = "" 

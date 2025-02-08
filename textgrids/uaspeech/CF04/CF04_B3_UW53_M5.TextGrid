@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.099438 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.099438 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.51 
+            text = "" 
+        intervals [2]:
+            xmin = 0.51 
+            xmax = 1.43 
+            text = "professionals" 
+        intervals [3]:
+            xmin = 1.43 
+            xmax = 2.099438 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 2.099438 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.51 
+            text = "" 
+        intervals [2]:
+            xmin = 0.51 
+            xmax = 0.57 
+            text = "P" 
+        intervals [3]:
+            xmin = 0.57 
+            xmax = 0.6 
+            text = "R" 
+        intervals [4]:
+            xmin = 0.6 
+            xmax = 0.63 
+            text = "AH0" 
+        intervals [5]:
+            xmin = 0.63 
+            xmax = 0.73 
+            text = "F" 
+        intervals [6]:
+            xmin = 0.73 
+            xmax = 0.83 
+            text = "EH1" 
+        intervals [7]:
+            xmin = 0.83 
+            xmax = 0.97 
+            text = "SH" 
+        intervals [8]:
+            xmin = 0.97 
+            xmax = 1.0 
+            text = "AH0" 
+        intervals [9]:
+            xmin = 1.0 
+            xmax = 1.06 
+            text = "N" 
+        intervals [10]:
+            xmin = 1.06 
+            xmax = 1.19 
+            text = "AH0" 
+        intervals [11]:
+            xmin = 1.19 
+            xmax = 1.26 
+            text = "L" 
+        intervals [12]:
+            xmin = 1.26 
+            xmax = 1.43 
+            text = "Z" 
+        intervals [13]:
+            xmin = 1.43 
+            xmax = 2.099438 
+            text = "" 

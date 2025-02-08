@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3.101812 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 3.101812 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.66 
+            text = "" 
+        intervals [2]:
+            xmin = 0.66 
+            xmax = 2.13 
+            text = "pennsylvania" 
+        intervals [3]:
+            xmin = 2.13 
+            xmax = 3.101812 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 3.101812 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 0.66 
+            text = "" 
+        intervals [2]:
+            xmin = 0.66 
+            xmax = 0.81 
+            text = "P" 
+        intervals [3]:
+            xmin = 0.81 
+            xmax = 0.89 
+            text = "EH2" 
+        intervals [4]:
+            xmin = 0.89 
+            xmax = 1.06 
+            text = "N" 
+        intervals [5]:
+            xmin = 1.06 
+            xmax = 1.2 
+            text = "S" 
+        intervals [6]:
+            xmin = 1.2 
+            xmax = 1.25 
+            text = "AH0" 
+        intervals [7]:
+            xmin = 1.25 
+            xmax = 1.29 
+            text = "L" 
+        intervals [8]:
+            xmin = 1.29 
+            xmax = 1.44 
+            text = "V" 
+        intervals [9]:
+            xmin = 1.44 
+            xmax = 1.77 
+            text = "EY1" 
+        intervals [10]:
+            xmin = 1.77 
+            xmax = 1.82 
+            text = "N" 
+        intervals [11]:
+            xmin = 1.82 
+            xmax = 1.88 
+            text = "Y" 
+        intervals [12]:
+            xmin = 1.88 
+            xmax = 2.13 
+            text = "AH0" 
+        intervals [13]:
+            xmin = 2.13 
+            xmax = 3.101812 
+            text = "" 

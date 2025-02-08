@@ -1,0 +1,68 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1.7717862708896353 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 1.7717862708896353 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.23572708860320288 
+            text = "" 
+        intervals [2]:
+            xmin = 0.23572708860320288 
+            xmax = 1.3944809786320211 
+            text = "equilibrium" 
+        intervals [3]:
+            xmin = 1.3944809786320211 
+            xmax = 1.7717862708896353 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 1.7717862708896353 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.3027190786996493 
+            text = "" 
+        intervals [2]:
+            xmin = 0.3027190786996493 
+            xmax = 0.46847133207606245 
+            text = "IY2" 
+        intervals [3]:
+            xmin = 0.46847133207606245 
+            xmax = 0.5433525220590576 
+            text = "K" 
+        intervals [4]:
+            xmin = 0.5433525220590576 
+            xmax = 0.6031356199982181 
+            text = "W" 
+        intervals [5]:
+            xmin = 0.6031356199982181 
+            xmax = 0.798386989372006 
+            text = "AH0" 
+        intervals [6]:
+            xmin = 0.798386989372006 
+            xmax = 0.9757590376796133 
+            text = "B" 
+        intervals [7]:
+            xmin = 0.9757590376796133 
+            xmax = 0.9766086247575446 
+            text = "R" 
+        intervals [8]:
+            xmin = 0.9766086247575446 
+            xmax = 1.4015635609010801 
+            text = "IY0" 
+        intervals [9]:
+            xmin = 1.4015635609010801 
+            xmax = 1.7717862708896353 
+            text = "" 

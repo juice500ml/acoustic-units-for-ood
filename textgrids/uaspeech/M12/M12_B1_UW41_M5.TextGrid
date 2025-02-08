@@ -1,0 +1,84 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 5.168375 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 5.168375 
+        intervals: size = 3 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 2.29 
+            text = "" 
+        intervals [2]:
+            xmin = 2.29 
+            xmax = 4.0 
+            text = "inalienable" 
+        intervals [3]:
+            xmin = 4.0 
+            xmax = 5.168375 
+            text = "" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "phones" 
+        xmin = 0 
+        xmax = 5.168375 
+        intervals: size = 13 
+        intervals [1]:
+            xmin = 0.0 
+            xmax = 2.29 
+            text = "" 
+        intervals [2]:
+            xmin = 2.29 
+            xmax = 2.42 
+            text = "IH0" 
+        intervals [3]:
+            xmin = 2.42 
+            xmax = 2.77 
+            text = "N" 
+        intervals [4]:
+            xmin = 2.77 
+            xmax = 2.94 
+            text = "EY1" 
+        intervals [5]:
+            xmin = 2.94 
+            xmax = 3.24 
+            text = "L" 
+        intervals [6]:
+            xmin = 3.24 
+            xmax = 3.27 
+            text = "Y" 
+        intervals [7]:
+            xmin = 3.27 
+            xmax = 3.33 
+            text = "AH0" 
+        intervals [8]:
+            xmin = 3.33 
+            xmax = 3.63 
+            text = "N" 
+        intervals [9]:
+            xmin = 3.63 
+            xmax = 3.66 
+            text = "AH0" 
+        intervals [10]:
+            xmin = 3.66 
+            xmax = 3.69 
+            text = "B" 
+        intervals [11]:
+            xmin = 3.69 
+            xmax = 3.7 
+            text = "AH0" 
+        intervals [12]:
+            xmin = 3.7 
+            xmax = 4.0 
+            text = "L" 
+        intervals [13]:
+            xmin = 4.0 
+            xmax = 5.168375 
+            text = "" 
