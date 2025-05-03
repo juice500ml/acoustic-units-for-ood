@@ -1,5 +1,14 @@
 # Leveraging Allophony in Self-Supervised Speech Models for Atypical Pronunciation Assessment (NAACL 2025)
-https://arxiv.org/abs/2502.07029
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=qsQfUAw1qHs
+" target="_blank"><img src="http://img.youtube.com/vi/ZRF4u1eThJM/0.jpg" 
+alt="presentation" width="360" height="270" border="10" /></a>
+- Paper: https://arxiv.org/abs/2502.07029
+- Poster: [assets/poster.pdf](./assets/poster.pdf)
+- Slides: [assets/slides.pdf](./assets/slides.pdf)
+- Presentation: https://youtu.be/ZRF4u1eThJM
+
+![Poster](assets/poster.png)
+
 
 ## Textgrids
 We release the [textgrids](./textgrids/) for TORGO and UASpeech, thanks to the efforts of linguists and kind approvals from the original authors.
